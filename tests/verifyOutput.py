@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 
-# 
+#
 # LSST Data Management System
 # Copyright 2008, 2009, 2010 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -11,27 +11,30 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
 #
-# routines for testing logging output 
+# routines for testing logging output
 #
 # The wrapped test program writes output to the screen.  This module tests
 # the output by redirecting it to a file and comparing with canonical
 # results.  Note that when the underlying test program is changed, the file
-# containing the canonical results usually must change as well.  
+# containing the canonical results usually must change as well.
 
-import sys, os, re
-import subprocess 
+import sys
+import os
+import re
+import subprocess
+
 
 def captureOutput(prog, outfile):
     """execute the given program and append the output to the given file.
@@ -39,7 +42,7 @@ def captureOutput(prog, outfile):
     out = open(outfile, 'w')
     test = subprocess.Popen(prog, bufsize=1, close_fds=True,
                             stderr=subprocess.PIPE)
-    filter = subprocess.Popen("egrep -v DATE:|TIMESTAMP:".split(), 
+    filter = subprocess.Popen("egrep -v DATE:|TIMESTAMP:".split(),
                               bufsize=1, close_fds=True,
                               stdin=test.stderr, stdout=out)
     filter.wait()
@@ -49,6 +52,7 @@ def captureOutput(prog, outfile):
     if excode:
         print >> sys.stdout, prog, "exited with status", excode
     return excode == 0
+
 
 def compareOutput(test, canon, showdiff=True):
     """return True if the two files have the same contents; False, otherwise.
@@ -93,7 +97,7 @@ def compareOutput(test, canon, showdiff=True):
                 print >> sys.stderr, "Actual: " + line + repr(fields)
                 print >> sys.stderr, "Correct: " + check[0] + repr(check[1])
                 return False
-                         
+
             fields = {}
     act.close()
 
@@ -139,12 +143,14 @@ def checkOutput(prog, outfile, canon, showdiff=True):
 
     return okay and same
 
+
 def test(prog, canon_suffix="_correct.txt", test_suffix="_results.txt"):
     outdir = os.path.dirname(sys.argv[0])
-    if len(outdir) > 0:  prog = os.path.join(outdir, prog)
+    if len(outdir) > 0:
+        prog = os.path.join(outdir, prog)
     outfile = prog + test_suffix
     canon = prog + canon_suffix
-    
+
     return checkOutput(prog, outfile, canon)
 
 

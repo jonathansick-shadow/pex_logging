@@ -14,10 +14,12 @@ import random
 
 from lsst.pex.logging import Log, BlockTimingLog, LogRecord
 
+
 class BlockTimingLogTestCase(unittest.TestCase):
 
     def setUp(self):
         self.log = BlockTimingLog(Log.getDefaultLog(), "test")
+
     def tearDown(self):
         pass
 
@@ -50,7 +52,7 @@ class BlockTimingLogTestCase(unittest.TestCase):
         lr = LogRecord(0, 0, True)
         self.log.setUsageFlags(self.log.SUTIME)
         self.log.addUsageProps(lr)
-        ps = lr.getProperties();
+        ps = lr.getProperties()
         self.assert_(ps.exists("usertime"))
         self.assert_(ps.exists("systemtime"))
         self.assert_(not ps.exists("nswap"))
@@ -58,7 +60,7 @@ class BlockTimingLogTestCase(unittest.TestCase):
         lr = LogRecord(0, 0, True)
         self.log.setUsageFlags(self.log.ALLUDATA)
         self.log.addUsageProps(lr)
-        ps = lr.getProperties();
+        ps = lr.getProperties()
         self.assert_(ps.exists("usertime"))
         self.assert_(ps.exists("systemtime"))
         self.assert_(ps.exists("maxrss"))
@@ -71,4 +73,4 @@ __all__ = "BlockTimingLogTestCase".split()
 if __name__ == "__main__":
     unittest.main()
 
-        
+
